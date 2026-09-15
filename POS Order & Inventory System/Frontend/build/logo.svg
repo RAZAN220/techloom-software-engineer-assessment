@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768" role="img" aria-labelledby="title desc">
+  <title id="title">POS Order and Inventory System</title>
+  <desc id="desc">Point of sale monitor, inventory boxes, and checklist logo</desc>
+  <defs><linearGradient id="green" x1="0" x2="1"><stop stop-color="#159447"/><stop offset="1" stop-color="#57b843"/></linearGradient><linearGradient id="blue" x1="0" x2="1"><stop stop-color="#0b315b"/><stop offset="1" stop-color="#084b88"/></linearGradient></defs>
+  <rect width="768" height="768" fill="#fff"/>
+  <path d="M198 201c76-114 261-139 382-64 65 40 104 100 112 165" fill="none" stroke="url(#green)" stroke-width="23"/>
+  <path d="M184 356c39 91 132 143 229 143 81 0 155-31 207-84" fill="none" stroke="url(#blue)" stroke-width="23"/>
+  <g stroke="#0b315b" stroke-linejoin="round">
+    <path fill="#fff" stroke-width="15" d="M223 155h207c17 0 29 15 25 31l-20 126c-3 17-17 29-34 29H191c-17 0-29-15-25-31l26-126c3-17 14-29 31-29Z"/>
+    <path fill="url(#blue)" stroke-width="10" d="M203 339h218c17 0 31 14 31 31v47H172v-47c0-17 14-31 31-31Z"/>
+    <path fill="none" stroke="#4d83b1" stroke-width="13" stroke-linecap="round" d="M310 380h65"/>
+    <circle cx="273" cy="381" r="9" fill="#fff" stroke-width="3"/>
+  </g>
+  <g fill="#d9903b" stroke="#a8662d" stroke-width="5"><path d="M452 203h77v58h-77z"/><path d="M435 260h91v92h-91z"/><path d="M526 250h65v90h-65z"/><path d="M490 276h37v76h-37z"/></g>
+  <g fill="#fff" stroke="#0b315b" stroke-width="12"><rect x="499" y="302" width="105" height="139" rx="19"/><path d="M529 302v-15c0-10 8-18 18-18h9c10 0 18 8 18 18v15"/></g>
+  <g fill="none" stroke="#159447" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="m517 337 8 8 14-17M517 374l8 8 14-17M517 411l8 8 14-17"/></g>
+  <g fill="none" stroke="#0b477d" stroke-width="7" stroke-linecap="round"><path d="M558 337h30M558 374h30M558 411h30"/><path d="m211 217 16 2 9 48h78l17-44h-93"/><path d="M240 282h73"/></g>
+  <circle cx="237" cy="302" r="9" fill="#0b315b"/><circle cx="304" cy="302" r="9" fill="#0b315b"/>
+  <rect x="313" y="243" width="70" height="38" rx="8" fill="#159447"/><text x="348" y="269" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="23" font-weight="700">POS</text>
+  <text x="384" y="572" text-anchor="middle" fill="#0b315b" font-family="Arial,sans-serif" font-size="91" font-weight="800">POS</text>
+  <text x="384" y="626" text-anchor="middle" font-family="Arial,sans-serif" font-size="42" font-weight="700"><tspan fill="#0b315b">Order &amp; </tspan><tspan fill="#159447">Inventory</tspan></text>
+  <path d="M165 666h87M516 666h87" stroke="#0b477d" stroke-width="5"/><text x="384" y="679" text-anchor="middle" fill="#0b315b" font-family="Arial,sans-serif" font-size="31" letter-spacing="10">System</text>
+</svg>
