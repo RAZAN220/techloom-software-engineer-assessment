@@ -1,0 +1,1 @@
+export default function StockBadge({ stock }) { const label = stock === 0 ? 'Out of stock' : stock <= 5 ? 'Low stock' : 'In stock'; return <span className={`stock ${stock === 0 ? 'out' : stock <= 5 ? 'low' : 'in'}`}><i />{label} · {stock}</span>; }

@@ -1,0 +1,9 @@
+import { useState } from 'react';
+
+export default function ProductForm({ onSubmit, onCancel, product }) {
+	const [form, setForm] = useState(product ? { name: product.name, price: product.price, availableStock: product.stock } : { name: '', price: '', availableStock: '' });
+	const [error, setError] = useState('');
+	const update = event => setForm(current => ({ ...current, [event.target.name]: event.target.value }));
+	const submit = async event => { event.preventDefault(); if (!form.name.trim() || Number(form.price) < 0 || Number(form.availableStock) < 0) return setError('Enter a name, non-negative price, and non-negative stock.'); try { await onSubmit({ name: form.name.trim(), price: Number(form.price), availableStock: Number(form.availableStock) }); setForm({ name: '', price: '', availableStock: '' }); setError(''); } catch (submitError) { setError(submitError.message); } };
+	return <form className="product-form" onSubmit={submit}><div className="form-heading"><div><p className="eyebrow">Catalog management</p><h2>{product ? 'Edit product' : 'Add product'}</h2></div><button type="button" className="text-button" onClick={onCancel}>Close</button></div><div className="form-grid"><label>Product name<input name="name" value={form.name} onChange={update} placeholder="e.g. Counter notebook" /></label><label>Price<input name="price" type="number" min="0" step="0.01" value={form.price} onChange={update} placeholder="0.00" /></label><label>Available stock<input name="availableStock" type="number" min="0" step="1" value={form.availableStock} onChange={update} placeholder="0" /></label></div>{error && <p className="form-error">{error}</p>}<button className="primary-button" type="submit">{product ? 'Update product' : 'Save product'}</button></form>;
+}

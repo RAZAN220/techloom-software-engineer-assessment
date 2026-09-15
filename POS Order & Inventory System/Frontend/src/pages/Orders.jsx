@@ -1,0 +1,15 @@
+import { useEffect, useMemo, useState } from 'react';
+import StatusBadge from '../components/StatusBadge.jsx';
+import OrderDetails from './OrderDetails.jsx';
+
+export default function Orders({ orders, onPayment, onCancel, onRefund }) {
+  const [filter, setFilter] = useState('ALL');
+  const [query, setQuery] = useState('');
+  const [now, setNow] = useState(Date.now());
+  const [selected, setSelected] = useState(null);
+  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, []);
+  const filtered = useMemo(() => orders.filter(order => filter === 'ALL' || order.status === filter).filter(order => order.orderNumber.toLowerCase().includes(query.toLowerCase())), [orders, filter, query]);
+  const remaining = expiresAt => Math.max(0, new Date(expiresAt).getTime() - now);
+  const formatTime = value => `${String(Math.floor(value / 60000)).padStart(2, '0')}:${String(Math.floor(value / 1000) % 60).padStart(2, '0')}`;
+  return <section><div className="page-heading"><div><p className="eyebrow">Fulfillment</p><h1>Orders</h1><p className="page-subtitle">Track payment, reservations, and order status.</p></div><span className="record-count">{filtered.length} orders</span></div><div className="toolbar"><label className="search-field"><span>⌕</span><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search order number" /></label><div className="filter-tabs">{['ALL', 'PENDING', 'RESERVED', 'PAID', 'FAILED', 'CANCELLED', 'EXPIRED'].map(value => <button className={filter === value ? 'selected' : ''} onClick={() => setFilter(value)} key={value}>{value === 'ALL' ? 'All' : value}</button>)}</div></div>{filtered.length ? <div className="orders-list">{filtered.map(order => <article className="order-card" key={order._id} onClick={() => setSelected(order)}><div className="order-main"><div><span className="product-code">{order.orderNumber}</span><h2>{order.items?.length || 0} line items</h2><small>{new Date(order.createdAt).toLocaleString()}</small></div><strong>${Number(order.totalAmount).toFixed(2)}</strong></div><div className="order-meta"><StatusBadge value={order.status} /><span>Payment: {order.paymentStatus || 'pending'}</span>{order.status === 'RESERVED' && order.reservationExpiresAt && <span className="countdown">Reserved for {formatTime(remaining(order.reservationExpiresAt))}</span>}</div>{order.status === 'RESERVED' && <div className="payment-actions" onClick={event => event.stopPropagation()}><span>Simulate payment:</span><button onClick={() => onPayment(order._id, 'SUCCESS')}>Success</button><button onClick={() => onPayment(order._id, 'FAILURE')}>Failure</button><button onClick={() => onPayment(order._id, 'TIMEOUT')}>Timeout</button><button className="cancel-action" onClick={() => onCancel(order._id)}>Cancel order</button></div>}</article>)}</div> : <div className="empty-state-box"><strong>No matching orders</strong><span>Try another status or search term.</span></div>}<OrderDetails order={selected} onClose={() => setSelected(null)} onRefund={async orderId => { await onRefund(orderId); setSelected(null); }} /></section>;
+}

@@ -1,0 +1,5 @@
+const items = [['Dashboard', '⌂'], ['Products', '▦'], ['Stock', '▥'], ['Orders', '≡'], ['Cart', '◫']];
+
+export default function Navbar({ page, setPage, cartCount }) {
+  return <aside className="sidebar"><div className="brand"><span className="brand-mark">C</span><div><strong>Counterpoint</strong><small>POS operations</small></div></div><div className="workspace-label">Workspace</div><nav>{items.map(([item, icon]) => <button className={page === item ? 'active' : ''} onClick={() => setPage(item)} key={item}><span className="nav-icon">{icon}</span><span>{item}</span>{item === 'Cart' && cartCount > 0 && <b className="cart-count">{cartCount}</b>}</button>)}</nav><div className="sidebar-footer"><span className="status-light" />System operational</div></aside>;
+}

@@ -1,0 +1,1 @@
+export default function ConfirmDialog({ open, children, onConfirm, onCancel }) { return open ? <div className="dialog"><div><p>{children}</p><button onClick={onConfirm}>Confirm</button><button onClick={onCancel}>Cancel</button></div></div> : null; }

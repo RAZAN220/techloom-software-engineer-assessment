@@ -1,0 +1,27 @@
+import express from 'express';
+import * as productController from '../controllers/productController.js';
+import * as cartController from '../controllers/cartController.js';
+import * as orderController from '../controllers/orderController.js';
+
+const router = express.Router();
+router.post('/products', productController.createProduct);
+router.get('/products', productController.getProducts);
+router.get('/products/stock', productController.getStockLevels);
+router.get('/products/:id', productController.getProduct);
+router.put('/products/:id', productController.updateProduct);
+router.delete('/products/:id', productController.deleteProduct);
+router.post('/carts', cartController.createCart);
+router.get('/carts/:id', cartController.getCart);
+router.post('/carts/:id/items', cartController.addToCart);
+router.put('/carts/:id/items/:productId', cartController.updateCartItem);
+router.delete('/carts/:id/items/:productId', cartController.removeFromCart);
+router.delete('/carts/:id/items', cartController.clearCart);
+router.post('/carts/:id/checkout', orderController.createOrder);
+router.post('/orders', orderController.createOrder);
+router.get('/orders', orderController.getAllOrders);
+router.get('/orders/:id', orderController.getOrder);
+router.post('/orders/:id/checkout', orderController.checkout);
+router.post('/orders/:id/payment', orderController.payment);
+router.post('/orders/:id/refund', orderController.refund);
+router.post('/orders/:id/cancel', orderController.cancel);
+export default router;
