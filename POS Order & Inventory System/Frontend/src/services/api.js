@@ -1,7 +1,12 @@
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
+const API_URL = API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`;
 
 export const api = async (path, options = {}) => {
   try {
+    if (!API_URL) {
+      throw new Error('REACT_APP_API_URL is not configured. Set it to your deployed backend URL in Vercel.');
+    }
+
     const response = await fetch(`${API_URL}${path}`, {
       headers: { 'Content-Type': 'application/json', ...options.headers }, ...options
     });
@@ -9,7 +14,7 @@ export const api = async (path, options = {}) => {
     if (!response.ok) throw new Error(body.message || 'Request failed');
     return body;
   } catch (error) {
-    if (error instanceof TypeError) throw new Error(`Cannot connect to the backend at ${API_URL}. Start the backend with npm run dev.`);
+    if (error instanceof TypeError) throw new Error(`Cannot connect to the backend. Set REACT_APP_API_URL to your deployed backend URL.`);
     throw error;
   }
 };
