@@ -1,4 +1,5 @@
-const rawBase = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const rawBase = process.env.REACT_APP_API_URL;
+if (!rawBase) throw new Error('REACT_APP_API_URL is not set. Add it to your Vercel environment variables.');
 const API_BASE_URL = rawBase.replace(/\/$/, '');
 const API_URL = API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`;
 
