@@ -4,5 +4,8 @@
   "scripts": {
     "backend": "npm --prefix \"POS Order & Inventory System/Backend\" run dev",
     "frontend": "npm --prefix \"POS Order & Inventory System/Frontend\" start"
+  },
+  "dependencies": {
+    "mongodb": "^7.6.0"
   }
 }
