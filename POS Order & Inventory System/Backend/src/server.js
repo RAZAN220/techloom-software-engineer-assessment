@@ -41,7 +41,6 @@ app.use(async (req, res, next) => {
 app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.use('/api', routes);
-app.use('/', routes);
 app.use(errorHandler);
 
 export const startServer = async () => {
