@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 
-if (!process.env.MONGO_URI) {
-  throw new Error('MONGO_URI is not configured');
+let rawUri = (process.env.MONGO_URI || '').trim();
+rawUri = rawUri.replace(/:<([^>]+)>@/, ':$1@');
+if (!rawUri || rawUri.includes('your_mongodb_atlas_connection_string')) {
+  throw new Error('MONGO_URI environment variable is not set. Add it to your Vercel environment variables.');
 }
-
-const mongoUri = process.env.MONGO_URI;
+const mongoUri = rawUri;
 
 let cached = global.mongoose;
 if (!cached) {

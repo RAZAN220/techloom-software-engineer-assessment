@@ -5,6 +5,7 @@ export const createProduct = async (req, res) => {
   try {
     const data = { ...req.body };
     if (data.availableStock !== undefined && data.stock === undefined) data.stock = data.availableStock;
+    delete data.availableStock;
     if (!String(data.name || '').trim()) return res.status(422).json({ success: false, message: 'Product name is required', code: 'VALIDATION_ERROR' });
     res.status(201).json(await Product.create(data));
   }

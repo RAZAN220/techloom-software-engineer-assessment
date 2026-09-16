@@ -10,8 +10,8 @@ import { confirmStockSale, restoreStockSale } from './inventoryService.js';
 import { assertTransition } from '../utils/constants.js';
 
 export const createOrderFromCart = async (cartId, idempotencyKey) => {
-  if (!idempotencyKey) throw new Error('Idempotency key is required');
-  const existing = await Order.findOne({ $or: [{ idempotencyKey }, { cartId }] });
+  const resolvedKey = idempotencyKey || uuidv4();
+  const existing = await Order.findOne({ $or: [{ idempotencyKey: resolvedKey }, { cartId }] });
   if (existing) return existing;
   try {
     const cart = await Cart.findOneAndUpdate(
@@ -24,18 +24,22 @@ export const createOrderFromCart = async (cartId, idempotencyKey) => {
       if (duplicate) return duplicate;
       throw new Error('Cart not found or already checked out');
     }
-    if (!cart.items.length) throw new Error('Cart is empty');
+    if (!cart.items.length) {
+      await Cart.findByIdAndUpdate(cartId, { status: 'active' });
+      throw new Error('Cart is empty');
+    }
     const totalAmount = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
     const [order] = await Order.create([{
       orderNumber: `ORD-${Date.now()}-${uuidv4().slice(0, 4).toUpperCase()}`,
       cartId: cart._id,
       items: cart.items.map(item => ({ productId: item.productId, name: item.name, price: item.price, quantity: item.quantity })),
       totalAmount,
-      idempotencyKey
+      idempotencyKey: resolvedKey
     }]);
     return order;
   } catch (error) {
-    if (error.code === 11000) return Order.findOne({ $or: [{ idempotencyKey }, { cartId }] });
+    if (error.code === 11000) return Order.findOne({ $or: [{ idempotencyKey: resolvedKey }, { cartId }] });
+    await Cart.findByIdAndUpdate(cartId, { status: 'active' }).catch(() => {});
     throw error;
   }
 };

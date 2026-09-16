@@ -21,6 +21,7 @@ export const addToCart = async (req, res) => {
     const [product, cart] = await Promise.all([Product.findById(productId), Cart.findById(req.params.id)]);
     if (!product) return res.status(404).json({ message: 'Product not found' });
     if (!cart) return res.status(404).json({ message: 'Cart not found' });
+    if (cart.status !== 'active') return res.status(400).json({ message: 'Cart is already checked out' });
     const item = cart.items.find(entry => entry.productId.toString() === productId);
     const requestedQuantity = (item?.quantity || 0) + quantity;
     if (product.stock < requestedQuantity) return res.status(400).json({ message: `Only ${product.stock} units available` });
@@ -34,6 +35,7 @@ export const removeFromCart = async (req, res) => {
   try {
     const cart = await Cart.findById(req.params.id);
     if (!cart) return res.status(404).json({ message: 'Cart not found' });
+    if (cart.status !== 'active') return res.status(400).json({ message: 'Cart is already checked out' });
     cart.items = cart.items.filter(item => item.productId.toString() !== req.params.productId);
     res.json(await cart.save());
   } catch (error) { res.status(400).json({ message: error.message }); }
@@ -45,6 +47,7 @@ export const updateCartItem = async (req, res) => {
     if (!Number.isInteger(quantity) || quantity < 1) return res.status(400).json({ message: 'Quantity must be a positive integer' });
     const [cart, product] = await Promise.all([Cart.findById(req.params.id), Product.findById(req.params.productId)]);
     if (!cart) return res.status(404).json({ message: 'Cart not found' });
+    if (cart.status !== 'active') return res.status(400).json({ message: 'Cart is already checked out' });
     if (!product) return res.status(404).json({ message: 'Product not found' });
     if (product.stock < quantity) return res.status(400).json({ message: `Only ${product.stock} units available` });
     const item = cart.items.find(entry => entry.productId.toString() === req.params.productId);
@@ -58,6 +61,7 @@ export const clearCart = async (req, res) => {
   try {
     const cart = await Cart.findById(req.params.id);
     if (!cart) return res.status(404).json({ message: 'Cart not found' });
+    if (cart.status !== 'active') return res.status(400).json({ message: 'Cart is already checked out' });
     cart.items = [];
     res.json(await cart.save());
   } catch (error) { res.status(400).json({ message: error.message }); }

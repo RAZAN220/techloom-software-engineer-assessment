@@ -8,11 +8,8 @@ import { errorHandler } from './middleware/errorHandler.js';
 
 export const app = express();
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  'http://localhost:3000',
-  'http://127.0.0.1:3000'
-].filter(Boolean);
+const configuredFrontend = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null;
+const allowedOrigins = [configuredFrontend].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -20,7 +17,15 @@ app.use(cors({
       callback(null, true);
       return;
     }
-    callback(new Error('CORS origin not allowed'));
+    if (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      callback(null, true);
+      return;
+    }
+    if (configuredFrontend?.includes('vercel.app') && origin.endsWith('.vercel.app')) {
+      callback(null, true);
+      return;
+    }
+    callback(null, false);
   },
   credentials: true
 }));
@@ -33,8 +38,10 @@ app.use(async (req, res, next) => {
     next(error);
   }
 });
+app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 app.use('/api', routes);
+app.use('/', routes);
 app.use(errorHandler);
 
 export const startServer = async () => {

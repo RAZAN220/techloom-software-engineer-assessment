@@ -44,9 +44,14 @@ export const releaseReservation = async (reservationId, reason = 'released', fin
   for (const item of reservation.items) await releaseStock(item.productId, item.quantity);
   const status = finalStatus || (reason === 'expired' ? 'EXPIRED' : reason === 'completed' ? 'PAID' : 'CANCELLED');
   assertTransition('RESERVED', status);
+  const updateFields = { status };
+  if (status === 'EXPIRED') updateFields.expiredAt = new Date();
+  else if (status === 'CANCELLED') updateFields.cancelledAt = new Date();
+  else if (status === 'FAILED') updateFields.failedAt = new Date();
+
   await Order.findOneAndUpdate(
     { _id: reservation.orderId, status: { $in: ['RESERVED', 'RESERVING'] } },
-    { status, ...(reason === 'expired' ? { expiredAt: new Date() } : { cancelledAt: new Date() }) }
+    updateFields
   );
   return reservation;
 };
