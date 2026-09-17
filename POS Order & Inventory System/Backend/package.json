@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "test": "node --test src/utils/constants.test.js",
     "test:concurrency": "node src/models/test-concurrency.js"
+    
   },
   "dependencies": {
     "cors": "^2.8.5",
