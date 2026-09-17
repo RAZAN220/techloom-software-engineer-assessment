@@ -4,10 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/server.js",
-    "start": "node src/server.js",
-    "test": "node --test src/utils/constants.test.js",
-    "test:concurrency": "node src/models/test-concurrency.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
     
   },
   "dependencies": {
